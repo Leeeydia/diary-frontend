@@ -26,11 +26,11 @@ const EMOTIONS: EmotionConfig[] = [
     buttonStyle: 'bg-red-400 hover:bg-red-500',
   },
   {
-    value: 'TIRED',
-    label: '피곤해',
-    emoji: '😴',
-    cardStyle: 'bg-purple-50 border border-purple-200',
-    buttonStyle: 'bg-purple-400 hover:bg-purple-500',
+    value: 'CALM',
+    label: '평온해',
+    emoji: '😌',
+    cardStyle: 'bg-green-50 border border-green-200',
+    buttonStyle: 'bg-green-400 hover:bg-green-500',
   },
 ];
 

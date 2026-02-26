@@ -38,13 +38,13 @@ const EMOTION_STYLES: Record<Emotion, EmotionStyle> = {
     label: '화나',
     emoji: '😠',
   },
-  TIRED: {
-    bg: 'bg-purple-50',
-    border: 'border-purple-200',
-    ring: 'focus:ring-purple-300',
-    button: 'bg-purple-400 hover:bg-purple-500',
-    label: '피곤해',
-    emoji: '😴',
+  CALM: {
+    bg: 'bg-green-50',
+    border: 'border-green-200',
+    ring: 'focus:ring-green-300',
+    button: 'bg-green-400 hover:bg-green-500',
+    label: '평온해',
+    emoji: '😌',
   },
 };
 

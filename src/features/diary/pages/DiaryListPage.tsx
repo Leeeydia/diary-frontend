@@ -42,12 +42,12 @@ const FILTER_BUTTONS: {
     inactive: "bg-white text-gray-600 border border-gray-300 hover:bg-red-50",
   },
   {
-    value: "TIRED",
-    label: "TIRED",
-    emoji: "😴",
-    active: "bg-purple-400 text-white",
+    value: "CALM",
+    label: "CALM",
+    emoji: "😌",
+    active: "bg-green-400 text-white",
     inactive:
-      "bg-white text-gray-600 border border-gray-300 hover:bg-purple-50",
+      "bg-white text-gray-600 border border-gray-300 hover:bg-green-50",
   },
 ];
 
