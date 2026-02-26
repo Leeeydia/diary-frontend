@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import type { Emotion, EmotionConfig } from '../types/home.types';
 import EmotionCard from '../components/EmotionCard';
-import HamburgerMenu from '../components/HamburgerMenu';
+import Header from '../../../shared/components/Header';
 
 const EMOTIONS: EmotionConfig[] = [
   {
@@ -26,8 +26,8 @@ const EMOTIONS: EmotionConfig[] = [
     buttonStyle: 'bg-red-400 hover:bg-red-500',
   },
   {
-    value: 'TIRED',
-    label: '피곤해',
+    value: 'CALM',
+    label: '평온해',
     emoji: '😴',
     cardStyle: 'bg-purple-50 border border-purple-200',
     buttonStyle: 'bg-purple-400 hover:bg-purple-500',
@@ -48,11 +48,7 @@ function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="w-full border-b border-gray-100 bg-white">
-        <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-12 py-4 flex justify-end">
-          <HamburgerMenu />
-        </div>
-      </header>
+      <Header />
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 pt-16 pb-24">
         <div className="flex flex-col items-center mb-14">
