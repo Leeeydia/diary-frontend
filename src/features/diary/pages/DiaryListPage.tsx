@@ -45,10 +45,9 @@ const FILTER_BUTTONS: {
   {
     value: "CALM",
     label: "CALM",
-    emoji: "😴",
-    active: "bg-purple-400 text-white",
-    inactive:
-      "bg-white text-gray-600 border border-gray-300 hover:bg-purple-50",
+    emoji: "😌",
+    active: "bg-green-400 text-white",
+    inactive: "bg-white text-gray-600 border border-gray-300 hover:bg-green-50",
   },
 ];
 
