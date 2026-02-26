@@ -9,6 +9,7 @@ export interface Diary {
 export interface CreateDiaryRequest {
   title: string;
   content: string;
+  emotion: string;
 }
 
 export interface UpdateDiaryRequest {
