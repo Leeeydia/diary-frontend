@@ -2,8 +2,9 @@ import axiosInstance from '../../../shared/api/axiosInstance';
 import type { ApiResponse } from '../../../shared/types/api.types';
 import type { Diary, CreateDiaryRequest, UpdateDiaryRequest } from '../types/diary.types';
 
-export const getDiaries = async (): Promise<ApiResponse<Diary[]>> => {
-  const { data } = await axiosInstance.get<ApiResponse<Diary[]>>('/api/diary');
+export const getDiaries = async (emotion?: string): Promise<ApiResponse<Diary[]>> => {
+  const params = emotion ? { emotion } : {};
+  const { data } = await axiosInstance.get<ApiResponse<Diary[]>>('/api/diary', { params });
   return data;
 };
 

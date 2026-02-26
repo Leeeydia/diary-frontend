@@ -1,18 +1,19 @@
+export type Emotion = 'HAPPY' | 'SAD' | 'ANGRY' | 'TIRED';
+
 export interface Diary {
   id: number;
-  title: string;
   content: string;
+  emotion: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateDiaryRequest {
-  title: string;
   content: string;
   emotion: string;
 }
 
 export interface UpdateDiaryRequest {
-  title?: string;
   content?: string;
+  emotion?: string;
 }

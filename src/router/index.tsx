@@ -23,11 +23,12 @@ const router = createBrowserRouter([
   { path: '/register', element: <RegisterPage /> },
 
   // write
-  { path: '/write/:emotion', element: <DiaryWritePage /> },
+  { path: '/write', element: <DiaryWritePage /> },
 
   // diary
   { path: '/diary', element: <DiaryListPage /> },
   { path: '/diary/:id', element: <DiaryDetailPage /> },
+  { path: '/diary/:id/edit', element: <DiaryWritePage /> },
 
   // board
   { path: '/board', element: <BoardListPage /> },
