@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getDiary, deleteDiary } from '../api/diaryApi';
-import type { Diary } from '../types/diary.types';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getDiary, deleteDiary } from "../api/diaryApi";
+import type { Diary } from "../types/diary.types";
 
 function DiaryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +13,7 @@ function DiaryDetailPage() {
     if (!id) return;
     getDiary(Number(id))
       .then((res) => {
-        if (res.code === 'SUCCESS') setDiary(res.data);
+        if (res.code === "SUCCESS") setDiary(res.data);
       })
       .finally(() => setLoading(false));
   }, [id]);
@@ -21,16 +21,20 @@ function DiaryDetailPage() {
   const handleDelete = async () => {
     if (!diary) return;
     await deleteDiary(diary.id);
-    navigate('/diary');
+    navigate("/diary");
   };
 
-  if (loading) return <p className="p-8 text-center text-gray-500">불러오는 중...</p>;
-  if (!diary) return <p className="p-8 text-center text-gray-500">일기를 찾을 수 없습니다.</p>;
+  if (loading)
+    return <p className="p-8 text-center text-gray-500">불러오는 중...</p>;
+  if (!diary)
+    return (
+      <p className="p-8 text-center text-gray-500">일기를 찾을 수 없습니다.</p>
+    );
 
   return (
     <div className="max-w-2xl mx-auto p-8">
       <button
-        onClick={() => navigate('/diary')}
+        onClick={() => navigate("/diary")}
         className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-block"
       >
         ← 목록으로
@@ -38,7 +42,7 @@ function DiaryDetailPage() {
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <p className="text-sm text-gray-400 mb-6">
-          {new Date(diary.createdAt).toLocaleDateString('ko-KR')}
+          {new Date(diary.createdAt).toLocaleDateString("ko-KR")}
         </p>
         <p className="text-gray-700 whitespace-pre-wrap">{diary.content}</p>
       </div>
