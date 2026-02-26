@@ -43,7 +43,7 @@ function HomePage() {
       alert('로그인이 필요합니다.');
       return;
     }
-    navigate(`/write?emotion=${emotion}`);
+    navigate(`/write/${emotion}`);
   };
 
   return (

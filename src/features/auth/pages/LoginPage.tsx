@@ -22,7 +22,7 @@ function LoginPage() {
       const result = await login(form);
       if (result.code === 'SUCCESS') {
         localStorage.setItem('accessToken', result.data.accessToken);
-        navigate('/diary');
+        navigate('/');
       } else {
         setMessage(result.message || '로그인에 실패했습니다.');
       }

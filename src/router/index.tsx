@@ -7,6 +7,7 @@ import RegisterPage from '../features/auth/pages/RegisterPage';
 
 import DiaryListPage from '../features/diary/pages/DiaryListPage';
 import DiaryDetailPage from '../features/diary/pages/DiaryDetailPage';
+import DiaryWritePage from '../features/diary/pages/DiaryWritePage';
 
 import BoardListPage from '../features/board/pages/BoardListPage';
 import BoardDetailPage from '../features/board/pages/BoardDetailPage';
@@ -20,6 +21,9 @@ const router = createBrowserRouter([
   // auth
   { path: '/login', element: <LoginPage /> },
   { path: '/register', element: <RegisterPage /> },
+
+  // write
+  { path: '/write/:emotion', element: <DiaryWritePage /> },
 
   // diary
   { path: '/diary', element: <DiaryListPage /> },
