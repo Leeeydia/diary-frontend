@@ -1,4 +1,4 @@
-export type Emotion = 'HAPPY' | 'SAD' | 'ANGRY' | 'CALM';
+export type Emotion = "HAPPY" | "SAD" | "ANGRY" | "CALM";
 
 export interface Diary {
   id: number;
