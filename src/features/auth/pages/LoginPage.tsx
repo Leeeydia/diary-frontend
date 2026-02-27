@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../api/authApi';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { login } from "../api/authApi";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ username: '', password: '' });
-  const [message, setMessage] = useState('');
+  const [form, setForm] = useState({ username: "", password: "" });
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,19 +15,19 @@ function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage('');
+    setMessage("");
     setLoading(true);
 
     try {
       const result = await login(form);
-      if (result.code === 'SUCCESS') {
-        localStorage.setItem('accessToken', result.data.accessToken);
-        navigate('/');
+      if (result.code === "SUCCESS") {
+        localStorage.setItem("accessToken", result.data.accessToken);
+        navigate("/");
       } else {
-        setMessage(result.message || '로그인에 실패했습니다.');
+        setMessage(result.message || "로그인에 실패했습니다.");
       }
     } catch {
-      setMessage('서버와 통신 중 오류가 발생했습니다.');
+      setMessage("서버와 통신 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
@@ -36,11 +36,16 @@ function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">로그인</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          로그인
+        </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               아이디
             </label>
             <input
@@ -55,7 +60,10 @@ function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               비밀번호
             </label>
             <input
@@ -74,16 +82,18 @@ function LoginPage() {
             disabled={loading}
             className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? '처리 중...' : '로그인'}
+            {loading ? "처리 중..." : "로그인"}
           </button>
         </form>
 
         {message && (
-          <p className="mt-4 text-center text-sm font-medium text-red-600">{message}</p>
+          <p className="mt-4 text-center text-sm font-medium text-red-600">
+            {message}
+          </p>
         )}
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          계정이 없으신가요?{' '}
+          계정이 없으신가요?{" "}
           <Link to="/register" className="text-blue-600 hover:underline">
             회원가입
           </Link>

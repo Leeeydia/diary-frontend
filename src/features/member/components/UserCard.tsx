@@ -5,7 +5,8 @@ type ReplyMode = "TEACHER" | "PARENT";
 
 interface MemberResponse {
   id: number;
-  username: string;
+  username: string; // 로그인용
+  nickname: string; // ⭐ 화면 표시용
   replyMode: ReplyMode;
   profileImageUrl: string | null;
 }
@@ -13,11 +14,11 @@ interface MemberResponse {
 const UserCard = () => {
   const [member, setMember] = useState<MemberResponse | null>(null);
 
-  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [isEditingNickname, setIsEditingNickname] = useState(false);
   const [isEditingReplyMode, setIsEditingReplyMode] = useState(false);
   const [isEditingImage, setIsEditingImage] = useState(false);
 
-  const [newUsername, setNewUsername] = useState("");
+  const [newNickname, setNewNickname] = useState("");
   const [newReplyMode, setNewReplyMode] = useState<ReplyMode>("TEACHER");
   const [newImage, setNewImage] = useState<File | null>(null);
 
@@ -34,21 +35,21 @@ const UserCard = () => {
     fetchProfile();
   }, []);
 
-  // 🔹 2. 닉네임 수정 (PUT)
-  const handleUsernameUpdate = async () => {
-    if (!newUsername) return;
+  // 🔹 2. 닉네임 수정
+  const handleNicknameUpdate = async () => {
+    if (!newNickname) return;
 
-    await axiosInstance.put("/api/mypage/username", {
-      username: newUsername,
+    await axiosInstance.put("/api/mypage/nickname", {
+      nickname: newNickname,
     });
 
-    setMember((prev) => (prev ? { ...prev, username: newUsername } : prev));
+    setMember((prev) => (prev ? { ...prev, nickname: newNickname } : prev));
 
-    setIsEditingUsername(false);
-    setNewUsername("");
+    setIsEditingNickname(false);
+    setNewNickname("");
   };
 
-  // 🔹 3. 답장모드 수정 (PUT)
+  // 🔹 3. 답장모드 수정
   const handleReplyModeUpdate = async () => {
     await axiosInstance.put("/api/mypage/reply-mode", {
       replyMode: newReplyMode,
@@ -59,7 +60,7 @@ const UserCard = () => {
     setIsEditingReplyMode(false);
   };
 
-  // 🔹 4. 프로필 이미지 수정 (POST)
+  // 🔹 4. 프로필 이미지 수정
   const handleImageUpdate = async () => {
     if (!newImage) return;
 
@@ -87,7 +88,7 @@ const UserCard = () => {
 
   return (
     <div className="rounded-[24px] border border-[#bfbdbd] p-[45px] shadow-md max-989:p-[20px]">
-      {/* 🔹 프로필 이미지 */}
+      {/* 프로필 이미지 */}
       <div className="relative m-auto h-[100px] w-[100px]">
         <div className="relative h-[100px] w-[100px] overflow-hidden rounded-full bg-gray-200">
           {member.profileImageUrl && (
@@ -109,57 +110,36 @@ const UserCard = () => {
         )}
       </div>
 
-      {isEditingImage && (
-        <div className="mt-4 flex flex-col space-y-2">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setNewImage(e.target.files?.[0] ?? null)}
-          />
-          <button
-            onClick={handleImageUpdate}
-            className="rounded-md bg-black px-4 py-2 text-white"
-          >
-            저장
-          </button>
-          <button
-            onClick={() => setIsEditingImage(false)}
-            className="rounded-md bg-gray-300 px-4 py-2"
-          >
-            취소
-          </button>
-        </div>
-      )}
-
-      {/* 🔹 닉네임 */}
+      {/* 닉네임 표시 */}
       <h2 className="mb-4 mt-6 text-center text-[22px] font-bold">
-        {member.username}
-        {!isEditingUsername && (
+        {member.nickname} {/* ⭐ username → nickname 변경 */}
+        {!isEditingNickname && (
           <button
             className="ml-2 text-gray-500 hover:text-gray-700"
-            onClick={() => setIsEditingUsername(true)}
+            onClick={() => setIsEditingNickname(true)}
           >
             ✏️
           </button>
         )}
       </h2>
 
-      {isEditingUsername && (
+      {/* 닉네임 수정 */}
+      {isEditingNickname && (
         <div className="flex flex-col space-y-2">
           <input
-            value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
+            value={newNickname}
+            onChange={(e) => setNewNickname(e.target.value)}
             className="rounded-md border px-3 py-2"
             placeholder="새 닉네임"
           />
           <button
-            onClick={handleUsernameUpdate}
+            onClick={handleNicknameUpdate}
             className="rounded-md bg-black px-4 py-2 text-white"
           >
             저장
           </button>
           <button
-            onClick={() => setIsEditingUsername(false)}
+            onClick={() => setIsEditingNickname(false)}
             className="rounded-md bg-gray-300 px-4 py-2"
           >
             취소
@@ -167,7 +147,7 @@ const UserCard = () => {
         </div>
       )}
 
-      {/* 🔹 답장 모드 */}
+      {/* 답장 모드 */}
       <div className="mt-6 text-center">
         <p className="font-semibold">답장 모드</p>
 
