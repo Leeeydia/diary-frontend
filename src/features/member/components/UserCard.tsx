@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../shared/api/axiosInstance";
+
+type ReplyMode = "TEACHER" | "PARENT";
+
 interface MemberResponse {
   id: number;
   username: string;
@@ -21,19 +24,21 @@ const UserCard = () => {
   // 🔹 1. 프로필 조회
   useEffect(() => {
     const fetchProfile = async () => {
-      const res = await axiosInstance.get("/member/me");
-      setMember(res.data.data);
-      setNewReplyMode(res.data.data.replyMode);
+      const res = await axiosInstance.get("/api/mypage");
+      const data = res.data.data;
+
+      setMember(data);
+      setNewReplyMode(data.replyMode);
     };
 
     fetchProfile();
   }, []);
 
-  // 🔹 2. 닉네임 수정
+  // 🔹 2. 닉네임 수정 (PUT)
   const handleUsernameUpdate = async () => {
     if (!newUsername) return;
 
-    await axiosInstance.patch("/member/username", {
+    await axiosInstance.put("/api/mypage/username", {
       username: newUsername,
     });
 
@@ -43,9 +48,9 @@ const UserCard = () => {
     setNewUsername("");
   };
 
-  // 🔹 3. 답장모드 수정
+  // 🔹 3. 답장모드 수정 (PUT)
   const handleReplyModeUpdate = async () => {
-    await axiosInstance.patch("/member/reply-mode", {
+    await axiosInstance.put("/api/mypage/reply-mode", {
       replyMode: newReplyMode,
     });
 
@@ -54,16 +59,22 @@ const UserCard = () => {
     setIsEditingReplyMode(false);
   };
 
-  // 🔹 4. 프로필 이미지 수정
+  // 🔹 4. 프로필 이미지 수정 (POST)
   const handleImageUpdate = async () => {
     if (!newImage) return;
 
     const formData = new FormData();
     formData.append("file", newImage);
 
-    const res = await axiosInstance.patch("/member/profile-image", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await axiosInstance.post(
+      "/api/mypage/profile-image",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
 
     setMember((prev) =>
       prev ? { ...prev, profileImageUrl: res.data.data } : prev,
