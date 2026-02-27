@@ -1,10 +1,5 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../shared/api/axiosInstance";
-
-type ReplyMode = "TEACHER" | "PARENT";
-
 interface MemberResponse {
   id: number;
   username: string;
