@@ -1,6 +1,6 @@
 import axiosInstance from '../../../shared/api/axiosInstance';
 import type { ApiResponse } from '../../../shared/types/api.types';
-import type { Diary, CreateDiaryRequest, UpdateDiaryRequest } from '../types/diary.types';
+import type { Diary, CreateDiaryRequest, UpdateDiaryRequest, DiaryReply } from '../types/diary.types';
 
 export const getDiaries = async (emotion?: string): Promise<ApiResponse<Diary[]>> => {
   const params = emotion ? { emotion } : {};
@@ -25,5 +25,10 @@ export const updateDiary = async (id: number, body: UpdateDiaryRequest): Promise
 
 export const deleteDiary = async (id: number): Promise<ApiResponse> => {
   const { data } = await axiosInstance.delete<ApiResponse>(`/api/diary/${id}`);
+  return data;
+};
+
+export const createDiaryReply = async (id: number): Promise<ApiResponse<DiaryReply>> => {
+  const { data } = await axiosInstance.post<ApiResponse<DiaryReply>>(`/api/diary/${id}/reply`);
   return data;
 };
