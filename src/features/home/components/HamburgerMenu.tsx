@@ -83,12 +83,6 @@ function HamburgerMenu() {
               >
                 마이페이지
               </button>
-              <button
-                onClick={() => handleNav('/support')}
-                className="text-left px-5 py-3.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                고객센터
-              </button>
               <div className="border-t border-gray-100 mt-2 pt-2">
                 <button
                   onClick={handleLogout}
@@ -105,12 +99,6 @@ function HamburgerMenu() {
                 className="text-left px-5 py-3.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 로그인
-              </button>
-              <button
-                onClick={() => handleNav('/support')}
-                className="text-left px-5 py-3.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                고객센터
               </button>
             </>
           )}

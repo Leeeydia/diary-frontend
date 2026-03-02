@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/DearSun2.svg';
+import logo from '../../assets/logo22.svg';
 import HamburgerMenu from '../../features/home/components/HamburgerMenu';
 
 function Header() {
@@ -11,7 +11,7 @@ function Header() {
         <img
           src={logo}
           alt="DearSun 로고"
-          className="h-8 cursor-pointer"
+          className="h-12 cursor-pointer"
           onClick={() => navigate('/')}
         />
         <HamburgerMenu />

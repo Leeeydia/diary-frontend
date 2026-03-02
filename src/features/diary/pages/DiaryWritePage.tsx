@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { createDiary, getDiary, updateDiary } from "../api/diaryApi";
 import type { Emotion } from "../types/diary.types";
+import Header from "../../../shared/components/Header";
 
 type EmotionStyle = {
   bg: string;
@@ -125,6 +126,7 @@ function DiaryWritePage() {
 
   return (
     <div className={`min-h-screen ${style.bg}`}>
+      <Header />
       <div className="max-w-2xl mx-auto px-4 py-12">
         <button
           onClick={() => navigate(isEditMode ? `/diary/${id}` : "/")}
@@ -159,7 +161,7 @@ function DiaryWritePage() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 text-white font-semibold rounded-lg ${style.button} disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors`}
+            className="w-full py-3 text-gray-700 font-semibold rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? "저장 중..." : isEditMode ? "수정 완료" : "일기 저장"}
           </button>
