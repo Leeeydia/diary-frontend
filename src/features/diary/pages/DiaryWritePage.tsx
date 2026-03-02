@@ -108,7 +108,7 @@ function DiaryWritePage() {
           emotion: form.emotion,
         });
         if (result.code === "SUCCESS") {
-          navigate("/diary");
+          navigate(`/diary/${result.data.id}`);
         } else {
           setError(result.message || "저장에 실패했습니다.");
         }

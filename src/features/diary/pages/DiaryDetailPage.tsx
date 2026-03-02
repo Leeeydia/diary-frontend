@@ -1,23 +1,93 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getDiary, deleteDiary } from "../api/diaryApi";
-import type { Diary } from "../types/diary.types";
+import {
+  getDiary,
+  deleteDiary,
+  getDiaryReply,
+  createDiaryReply,
+} from "../api/diaryApi";
+import { getMe } from "../../member/api/memberApi";
+import type { Diary, DiaryReply } from "../types/diary.types";
 import Header from "../../../shared/components/Header";
 
 function DiaryDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const [diary, setDiary] = useState<Diary | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [aiReply, setAiReply] = useState<DiaryReply | null>(null);
+  const [isDiaryLoading, setIsDiaryLoading] = useState(true);
+  const [isReplyLoading, setIsReplyLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [replyError, setReplyError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
-    getDiary(Number(id))
-      .then((res) => {
-        if (res.code === "SUCCESS") setDiary(res.data);
+
+    const diaryId = Number(id);
+
+    setIsDiaryLoading(true);
+    setError(null);
+
+    Promise.all([getDiary(diaryId), getMe(), getDiaryReply(diaryId)])
+      .then(([diaryRes, memberRes, replyRes]) => {
+        if (diaryRes.code !== "SUCCESS") {
+          setError(diaryRes.message || "일기를 불러오지 못했습니다.");
+          return;
+        }
+        if (memberRes.code !== "SUCCESS") {
+          setError(memberRes.message || "사용자 정보를 불러오지 못했습니다.");
+          return;
+        }
+
+        setDiary(diaryRes.data);
+
+        if (replyRes.code === "SUCCESS" && replyRes.data) {
+          setAiReply(replyRes.data);
+        }
       })
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setError("서버와 통신 중 오류가 발생했습니다.");
+      })
+      .finally(() => {
+        setIsDiaryLoading(false);
+      });
   }, [id]);
+
+  const handleCreateReply = async () => {
+    if (!diary) return;
+
+    setIsReplyLoading(true);
+    setReplyError(null);
+
+    try {
+      const res = await createDiaryReply(diary.id);
+      if (res.code === "SUCCESS") {
+        setAiReply(res.data);
+      } else {
+        setReplyError(res.message || "답장 생성에 실패했습니다.");
+      }
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response
+        ?.status;
+      if (status === 409) {
+        try {
+          const replyRes = await getDiaryReply(diary.id);
+          if (replyRes.code === "SUCCESS" && replyRes.data) {
+            setAiReply(replyRes.data);
+          } else {
+            setReplyError("기존 답장을 불러오지 못했습니다.");
+          }
+        } catch {
+          setReplyError("답장을 불러오지 못했습니다.");
+        }
+      } else {
+        setReplyError("답장 생성 중 오류가 발생했습니다.");
+      }
+    } finally {
+      setIsReplyLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!diary) return;
@@ -25,12 +95,19 @@ function DiaryDetailPage() {
     navigate("/diary");
   };
 
-  if (loading)
+  if (isDiaryLoading) {
     return <p className="p-8 text-center text-gray-500">불러오는 중...</p>;
-  if (!diary)
+  }
+
+  if (error && !diary) {
+    return <p className="p-8 text-center text-red-500">{error}</p>;
+  }
+
+  if (!diary) {
     return (
       <p className="p-8 text-center text-gray-500">일기를 찾을 수 없습니다.</p>
     );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -63,6 +140,46 @@ function DiaryDetailPage() {
           >
             삭제
           </button>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold text-gray-700 mb-3">
+            답장 받기
+          </h2>
+
+          {isReplyLoading && (
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center gap-2 text-gray-400">
+                <span className="animate-pulse">●</span>
+                <span className="animate-pulse delay-75">●</span>
+                <span className="animate-pulse delay-150">●</span>
+                <span className="ml-2 text-sm">답장을 쓰고 있어요...</span>
+              </div>
+            </div>
+          )}
+
+          {!isReplyLoading && replyError && (
+            <div className="bg-red-50 rounded-lg border border-red-200 p-6">
+              <p className="text-sm text-red-600">{replyError}</p>
+            </div>
+          )}
+
+          {!isReplyLoading && aiReply && (
+            <div className="bg-blue-50 rounded-lg border border-blue-200 p-6">
+              <p className="text-gray-700 whitespace-pre-wrap">
+                {aiReply.reply}
+              </p>
+            </div>
+          )}
+
+          {!isReplyLoading && !aiReply && (
+            <button
+              onClick={handleCreateReply}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            >
+              click!
+            </button>
+          )}
         </div>
       </div>
     </div>

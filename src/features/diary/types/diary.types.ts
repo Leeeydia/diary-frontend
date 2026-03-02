@@ -17,3 +17,8 @@ export interface UpdateDiaryRequest {
   content?: string;
   emotion?: string;
 }
+
+export interface DiaryReply {
+  id: number;
+  reply: string;
+}
