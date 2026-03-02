@@ -143,7 +143,9 @@ function DiaryDetailPage() {
         </div>
 
         <div className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-700 mb-3">답장</h2>
+          <h2 className="text-lg font-semibold text-gray-700 mb-3">
+            답장 받기
+          </h2>
 
           {isReplyLoading && (
             <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -175,7 +177,7 @@ function DiaryDetailPage() {
               onClick={handleCreateReply}
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
             >
-              답장 생성하기
+              click!
             </button>
           )}
         </div>
