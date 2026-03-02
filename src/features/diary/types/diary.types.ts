@@ -6,6 +6,7 @@ export interface Diary {
   emotion: string;
   createdAt: string;
   updatedAt: string;
+  nickname: string;
 }
 
 export interface CreateDiaryRequest {

@@ -72,6 +72,12 @@ function HamburgerMenu() {
                 내 일기
               </button>
               <button
+                onClick={() => handleNav('/board')}
+                className="text-left px-5 py-3.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                게시판
+              </button>
+              <button
                 onClick={() => handleNav('/mypage')}
                 className="text-left px-5 py-3.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >

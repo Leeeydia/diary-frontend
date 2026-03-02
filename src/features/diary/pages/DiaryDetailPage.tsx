@@ -6,7 +6,6 @@ import {
   getDiaryReply,
   createDiaryReply,
 } from "../api/diaryApi";
-import { getMe } from "../../member/api/memberApi";
 import type { Diary, DiaryReply } from "../types/diary.types";
 import Header from "../../../shared/components/Header";
 
@@ -21,6 +20,7 @@ function DiaryDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [replyError, setReplyError] = useState<string | null>(null);
 
+  // ✅ 일기 조회 (nickname 포함)
   useEffect(() => {
     if (!id) return;
 
@@ -29,22 +29,13 @@ function DiaryDetailPage() {
     setIsDiaryLoading(true);
     setError(null);
 
-    Promise.all([getDiary(diaryId), getMe(), getDiaryReply(diaryId)])
-      .then(([diaryRes, memberRes, replyRes]) => {
-        if (diaryRes.code !== "SUCCESS") {
-          setError(diaryRes.message || "일기를 불러오지 못했습니다.");
+    getDiary(diaryId)
+      .then((res) => {
+        if (res.code !== "SUCCESS") {
+          setError(res.message || "일기를 불러오지 못했습니다.");
           return;
         }
-        if (memberRes.code !== "SUCCESS") {
-          setError(memberRes.message || "사용자 정보를 불러오지 못했습니다.");
-          return;
-        }
-
-        setDiary(diaryRes.data);
-
-        if (replyRes.code === "SUCCESS" && replyRes.data) {
-          setAiReply(replyRes.data);
-        }
+        setDiary(res.data);
       })
       .catch(() => {
         setError("서버와 통신 중 오류가 발생했습니다.");
@@ -54,6 +45,7 @@ function DiaryDetailPage() {
       });
   }, [id]);
 
+  // ✅ 답장 생성
   const handleCreateReply = async () => {
     if (!diary) return;
 
@@ -62,6 +54,7 @@ function DiaryDetailPage() {
 
     try {
       const res = await createDiaryReply(diary.id);
+
       if (res.code === "SUCCESS") {
         setAiReply(res.data);
       } else {
@@ -70,6 +63,8 @@ function DiaryDetailPage() {
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response
         ?.status;
+
+      // 이미 존재하면 조회
       if (status === 409) {
         try {
           const replyRes = await getDiaryReply(diary.id);
@@ -120,10 +115,17 @@ function DiaryDetailPage() {
           ← 목록으로
         </button>
 
+        {/* ✅ 일기 카드 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <p className="text-sm text-gray-400 mb-6">
+          {/* 🔥 닉네임 표시 */}
+          <p className="text-sm font-medium text-gray-600 mb-1">
+            작성자: {diary.nickname}
+          </p>
+
+          <p className="text-xs text-gray-400 mb-6">
             {new Date(diary.createdAt).toLocaleDateString("ko-KR")}
           </p>
+
           <p className="text-gray-700 whitespace-pre-wrap">{diary.content}</p>
         </div>
 
@@ -142,6 +144,7 @@ function DiaryDetailPage() {
           </button>
         </div>
 
+        {/* ✅ AI 답장 영역 */}
         <div className="mt-8">
           <h2 className="text-lg font-semibold text-gray-700 mb-3">
             답장 받기
