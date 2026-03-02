@@ -19,5 +19,6 @@ export interface UpdateDiaryRequest {
 }
 
 export interface DiaryReply {
-  replyContent: string;
+  id: number;
+  reply: string;
 }

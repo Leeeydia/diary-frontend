@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getDiary, deleteDiary, createDiaryReply } from "../api/diaryApi";
+import {
+  getDiary,
+  deleteDiary,
+  getDiaryReply,
+  createDiaryReply,
+} from "../api/diaryApi";
 import { getMe } from "../../member/api/memberApi";
 import type { Diary, DiaryReply } from "../types/diary.types";
 import Header from "../../../shared/components/Header";
@@ -14,6 +19,7 @@ function DiaryDetailPage() {
   const [isDiaryLoading, setIsDiaryLoading] = useState(true);
   const [isReplyLoading, setIsReplyLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [replyError, setReplyError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -23,8 +29,8 @@ function DiaryDetailPage() {
     setIsDiaryLoading(true);
     setError(null);
 
-    Promise.all([getDiary(diaryId), getMe()])
-      .then(([diaryRes, memberRes]) => {
+    Promise.all([getDiary(diaryId), getMe(), getDiaryReply(diaryId)])
+      .then(([diaryRes, memberRes, replyRes]) => {
         if (diaryRes.code !== "SUCCESS") {
           setError(diaryRes.message || "일기를 불러오지 못했습니다.");
           return;
@@ -35,17 +41,9 @@ function DiaryDetailPage() {
         }
 
         setDiary(diaryRes.data);
-        setIsDiaryLoading(false);
 
-        setIsReplyLoading(true);
-        return createDiaryReply(diaryId);
-      })
-      .then((replyRes) => {
-        if (!replyRes) return;
-        if (replyRes.code === "SUCCESS") {
+        if (replyRes.code === "SUCCESS" && replyRes.data) {
           setAiReply(replyRes.data);
-        } else {
-          setError(replyRes.message || "AI 답장을 불러오지 못했습니다.");
         }
       })
       .catch(() => {
@@ -53,9 +51,43 @@ function DiaryDetailPage() {
       })
       .finally(() => {
         setIsDiaryLoading(false);
-        setIsReplyLoading(false);
       });
   }, [id]);
+
+  const handleCreateReply = async () => {
+    if (!diary) return;
+
+    setIsReplyLoading(true);
+    setReplyError(null);
+
+    try {
+      const res = await createDiaryReply(diary.id);
+      if (res.code === "SUCCESS") {
+        setAiReply(res.data);
+      } else {
+        setReplyError(res.message || "답장 생성에 실패했습니다.");
+      }
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response
+        ?.status;
+      if (status === 409) {
+        try {
+          const replyRes = await getDiaryReply(diary.id);
+          if (replyRes.code === "SUCCESS" && replyRes.data) {
+            setAiReply(replyRes.data);
+          } else {
+            setReplyError("기존 답장을 불러오지 못했습니다.");
+          }
+        } catch {
+          setReplyError("답장을 불러오지 못했습니다.");
+        }
+      } else {
+        setReplyError("답장 생성 중 오류가 발생했습니다.");
+      }
+    } finally {
+      setIsReplyLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!diary) return;
@@ -111,7 +143,7 @@ function DiaryDetailPage() {
         </div>
 
         <div className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-700 mb-3">AI 답장</h2>
+          <h2 className="text-lg font-semibold text-gray-700 mb-3">답장</h2>
 
           {isReplyLoading && (
             <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -119,23 +151,32 @@ function DiaryDetailPage() {
                 <span className="animate-pulse">●</span>
                 <span className="animate-pulse delay-75">●</span>
                 <span className="animate-pulse delay-150">●</span>
-                <span className="ml-2 text-sm">AI가 답장을 쓰고 있어요...</span>
+                <span className="ml-2 text-sm">답장을 쓰고 있어요...</span>
               </div>
             </div>
           )}
 
-          {!isReplyLoading && error && (
+          {!isReplyLoading && replyError && (
             <div className="bg-red-50 rounded-lg border border-red-200 p-6">
-              <p className="text-sm text-red-600">{error}</p>
+              <p className="text-sm text-red-600">{replyError}</p>
             </div>
           )}
 
           {!isReplyLoading && aiReply && (
             <div className="bg-blue-50 rounded-lg border border-blue-200 p-6">
               <p className="text-gray-700 whitespace-pre-wrap">
-                {aiReply.replyContent}
+                {aiReply.reply}
               </p>
             </div>
+          )}
+
+          {!isReplyLoading && !aiReply && (
+            <button
+              onClick={handleCreateReply}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            >
+              답장 생성하기
+            </button>
           )}
         </div>
       </div>
