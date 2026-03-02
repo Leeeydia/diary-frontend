@@ -11,8 +11,10 @@ import DiaryWritePage from "../features/diary/pages/DiaryWritePage";
 
 import BoardListPage from "../features/board/pages/BoardListPage";
 import BoardDetailPage from "../features/board/pages/BoardDetailPage";
+import BoardWritePage from "../features/board/pages/BoardWritePage";
 
 import ProfilePage from "../features/member/pages/ProfilePage";
+import ProtectedRoute from "../shared/components/ProtectedRoute";
 
 const router = createBrowserRouter([
   // 기본 진입점
@@ -30,9 +32,16 @@ const router = createBrowserRouter([
   { path: "/diary/:id", element: <DiaryDetailPage /> },
   { path: "/diary/:id/edit", element: <DiaryWritePage /> },
 
-  // board
-  { path: "/board", element: <BoardListPage /> },
-  { path: "/board/:id", element: <BoardDetailPage /> },
+  // board — 로그인 필수 (ProtectedRoute가 토큰 없으면 /login으로 리다이렉트)
+  {
+    element: <ProtectedRoute />,
+    children: [
+      { path: "/board", element: <BoardListPage /> },
+      { path: "/board/new", element: <BoardWritePage /> },
+      { path: "/board/:id", element: <BoardDetailPage /> },
+      { path: "/board/:id/edit", element: <BoardWritePage /> },
+    ],
+  },
 
   // member
   { path: "/mypage", element: <ProfilePage /> },
