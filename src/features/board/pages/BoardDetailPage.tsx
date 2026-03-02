@@ -10,7 +10,7 @@ function BoardDetailPage() {
   const navigate = useNavigate();
 
   const [post, setPost] = useState<Post | null>(null);
-  const [currentUsername, setCurrentUsername] = useState<string | null>(null);
+  const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +25,7 @@ function BoardDetailPage() {
           setError(postRes.message || '게시글을 불러오지 못했습니다.');
         }
         if (memberRes.code === 'SUCCESS') {
-          setCurrentUsername(memberRes.data.username);
+          setCurrentMemberId(memberRes.data.id);
         }
       })
       .catch(() => setError('서버와 통신 중 오류가 발생했습니다.'))
@@ -38,7 +38,8 @@ function BoardDetailPage() {
     navigate('/board');
   };
 
-  const isAuthor = post !== null && currentUsername === post.author;
+  // memberId 비교 — username/nickname 문자열 비교보다 신뢰성 높음
+  const isAuthor = post !== null && currentMemberId === post.memberId;
 
   if (loading) return <p className="p-8 text-center text-gray-500">불러오는 중...</p>;
   if (error) return <p className="p-8 text-center text-red-500">{error}</p>;
@@ -58,7 +59,7 @@ function BoardDetailPage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">{post.title}</h1>
           <p className="text-sm text-gray-400 mb-6">
-            {post.author} · {new Date(post.createdAt).toLocaleDateString('ko-KR')}
+            {post.nickname} · {new Date(post.createdAt).toLocaleDateString('ko-KR')}
           </p>
           <p className="text-gray-700 whitespace-pre-wrap">{post.content}</p>
         </div>

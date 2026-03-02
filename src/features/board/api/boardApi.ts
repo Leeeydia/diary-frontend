@@ -5,13 +5,12 @@ import type {
   CreatePostRequest,
   UpdatePostRequest,
   PostListParams,
-  PageResponse,
 } from '../types/board.types';
 
 export const getPosts = async (
   params?: PostListParams,
-): Promise<ApiResponse<PageResponse<Post>>> => {
-  const { data } = await axiosInstance.get<ApiResponse<PageResponse<Post>>>(
+): Promise<ApiResponse<Post[]>> => {
+  const { data } = await axiosInstance.get<ApiResponse<Post[]>>(
     '/api/board',
     { params },
   );

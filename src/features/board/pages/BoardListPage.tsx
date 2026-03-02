@@ -19,27 +19,24 @@ function BoardListPage() {
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState<Post[]>([]);
-  const [currentUsername, setCurrentUsername] = useState<string | null>(null);
+  const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [emotionFilter, setEmotionFilter] = useState<string>("");
 
-  // ✅ 현재 로그인 사용자 조회
+  // 현재 로그인 사용자 ID 조회 (작성자 비교용)
   useEffect(() => {
     getMe().then((res) => {
       if (res.code === "SUCCESS") {
-        setCurrentUsername(res.data.username);
+        setCurrentMemberId(res.data.id);
       }
     });
   }, []);
 
-  // ✅ 게시글 목록 조회
+  // 게시글 목록 조회
   useEffect(() => {
     const params: PostListParams = {};
-
-    if (emotionFilter) {
-      params.emotion = emotionFilter;
-    }
+    if (emotionFilter) params.emotion = emotionFilter;
 
     setLoading(true);
     setError(null);
@@ -47,7 +44,6 @@ function BoardListPage() {
     getPosts(params)
       .then((res) => {
         if (res.code === "SUCCESS") {
-          // 🔥 핵심: data가 바로 배열
           setPosts(res.data ?? []);
         } else {
           setError(res.message || "게시글을 불러오지 못했습니다.");
@@ -128,12 +124,13 @@ function BoardListPage() {
                       {post.title}
                     </h2>
                     <p className="text-sm text-gray-400 mt-1">
-                      {post.author ?? post.memberId} ·{" "}
+                      {post.nickname} ·{" "}
                       {new Date(post.createdAt).toLocaleDateString("ko-KR")}
                     </p>
                   </div>
 
-                  {currentUsername === post.author && (
+                  {/* memberId 비교로 본인 게시글에만 수정/삭제 표시 */}
+                  {currentMemberId === post.memberId && (
                     <div className="flex gap-3 ml-4 shrink-0">
                       <button
                         onClick={() => navigate(`/board/${post.id}/edit`)}
