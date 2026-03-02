@@ -141,7 +141,7 @@ function BoardWritePage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? "저장 중..." : isEditMode ? "수정 완료" : "작성 완료"}
           </button>
