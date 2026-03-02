@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axiosInstance from "../../../shared/api/axiosInstance";
 
 type ReplyMode = "TEACHER" | "PARENT";
 
 interface MemberResponse {
   id: number;
-  username: string; // 로그인용
-  nickname: string; // ⭐ 화면 표시용
+  username: string;
+  nickname: string;
   replyMode: ReplyMode;
   profileImageUrl: string | null;
 }
@@ -22,20 +22,21 @@ const UserCard = () => {
   const [newReplyMode, setNewReplyMode] = useState<ReplyMode>("TEACHER");
   const [newImage, setNewImage] = useState<File | null>(null);
 
-  // 🔹 1. 프로필 조회
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // 🔹 프로필 조회 (초기 로드 + 이미지 업로드 후 재조회에서 공용)
+  const fetchProfile = async () => {
+    const res = await axiosInstance.get("/api/mypage");
+    const data = res.data.data;
+    setMember(data);
+    setNewReplyMode(data.replyMode);
+  };
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      const res = await axiosInstance.get("/api/mypage");
-      const data = res.data.data;
-
-      setMember(data);
-      setNewReplyMode(data.replyMode);
-    };
-
     fetchProfile();
   }, []);
 
-  // 🔹 2. 닉네임 수정
+  // 🔹 닉네임 수정
   const handleNicknameUpdate = async () => {
     if (!newNickname) return;
 
@@ -44,44 +45,33 @@ const UserCard = () => {
     });
 
     setMember((prev) => (prev ? { ...prev, nickname: newNickname } : prev));
-
     setIsEditingNickname(false);
     setNewNickname("");
   };
 
-  // 🔹 3. 답장모드 수정
+  // 🔹 답장모드 수정
   const handleReplyModeUpdate = async () => {
     await axiosInstance.put("/api/mypage/reply-mode", {
       replyMode: newReplyMode,
     });
 
     setMember((prev) => (prev ? { ...prev, replyMode: newReplyMode } : prev));
-
     setIsEditingReplyMode(false);
   };
 
-  // 🔹 4. 프로필 이미지 수정
+  // 🔹 프로필 이미지 업로드
   const handleImageUpdate = async () => {
     if (!newImage) return;
 
     const formData = new FormData();
     formData.append("file", newImage);
 
-    const res = await axiosInstance.post(
-      "/api/mypage/profile-image",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    );
+    await axiosInstance.post("/api/mypage/profile-image", formData);
 
-    setMember((prev) =>
-      prev ? { ...prev, profileImageUrl: res.data.data } : prev,
-    );
+    await fetchProfile();
 
     setIsEditingImage(false);
+    setNewImage(null);
   };
 
   if (!member) return <div>로딩중...</div>;
@@ -93,26 +83,62 @@ const UserCard = () => {
         <div className="relative h-[100px] w-[100px] overflow-hidden rounded-full bg-gray-200">
           {member.profileImageUrl && (
             <img
-              src={member.profileImageUrl}
+              src={`${import.meta.env.VITE_API_BASE_URL}${member.profileImageUrl}`}
               alt="profile"
               className="h-full w-full object-cover"
             />
           )}
         </div>
 
+        {/* 카메라 버튼 */}
         {!isEditingImage && (
           <button
+            type="button"
             className="absolute bottom-0 right-0 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
             onClick={() => setIsEditingImage(true)}
           >
             📷
           </button>
         )}
+
+        {/* 파일 선택 UI */}
+        {isEditingImage && (
+          <div className="absolute left-1/2 top-[110%] w-[200px] -translate-x-1/2 rounded-md border bg-white p-3 shadow-md">
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  setNewImage(e.target.files[0]);
+                }
+              }}
+              className="mb-2 w-full text-sm"
+            />
+
+            <button
+              onClick={handleImageUpdate}
+              className="mb-1 w-full rounded-md bg-black px-3 py-2 text-white"
+            >
+              저장
+            </button>
+
+            <button
+              onClick={() => {
+                setIsEditingImage(false);
+                setNewImage(null);
+              }}
+              className="w-full rounded-md bg-gray-300 px-3 py-2"
+            >
+              취소
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* 닉네임 표시 */}
+      {/* 닉네임 */}
       <h2 className="mb-4 mt-6 text-center text-[22px] font-bold">
-        {member.nickname} {/* ⭐ username → nickname 변경 */}
+        {member.nickname}
         {!isEditingNickname && (
           <button
             className="ml-2 text-gray-500 hover:text-gray-700"
