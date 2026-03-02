@@ -75,11 +75,7 @@ export const getDiaryReply = async (
   }
 };
 
-export const createDiaryReply = async (
-  id: number,
-): Promise<ApiResponse<DiaryReply>> => {
-  const { data } = await axiosInstance.post<ApiResponse<DiaryReply>>(
-    `/api/diary/${id}/reply`,
-  );
+export const createDiaryReply = async (id: number) => {
+  const { data } = await axiosInstance.post(`/api/diary/${id}/reply`);
   return data;
 };

@@ -21,6 +21,7 @@ function DiaryDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [replyError, setReplyError] = useState<string | null>(null);
 
+  // ✅ 일기 + 사용자만 먼저 조회
   useEffect(() => {
     if (!id) return;
 
@@ -29,8 +30,8 @@ function DiaryDetailPage() {
     setIsDiaryLoading(true);
     setError(null);
 
-    Promise.all([getDiary(diaryId), getMe(), getDiaryReply(diaryId)])
-      .then(([diaryRes, memberRes, replyRes]) => {
+    Promise.all([getDiary(diaryId), getMe()])
+      .then(([diaryRes, memberRes]) => {
         if (diaryRes.code !== "SUCCESS") {
           setError(diaryRes.message || "일기를 불러오지 못했습니다.");
           return;
@@ -41,10 +42,6 @@ function DiaryDetailPage() {
         }
 
         setDiary(diaryRes.data);
-
-        if (replyRes.code === "SUCCESS" && replyRes.data) {
-          setAiReply(replyRes.data);
-        }
       })
       .catch(() => {
         setError("서버와 통신 중 오류가 발생했습니다.");
@@ -54,6 +51,7 @@ function DiaryDetailPage() {
       });
   }, [id]);
 
+  // ✅ 답장 생성
   const handleCreateReply = async () => {
     if (!diary) return;
 
@@ -62,6 +60,7 @@ function DiaryDetailPage() {
 
     try {
       const res = await createDiaryReply(diary.id);
+
       if (res.code === "SUCCESS") {
         setAiReply(res.data);
       } else {
@@ -70,6 +69,8 @@ function DiaryDetailPage() {
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response
         ?.status;
+
+      // ✅ 이미 답장이 존재하는 경우 (409)
       if (status === 409) {
         try {
           const replyRes = await getDiaryReply(diary.id);
