@@ -86,7 +86,7 @@ function RegisterPage() {
               required
               value={form.username}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -101,7 +101,7 @@ function RegisterPage() {
               required
               value={form.nickname}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -116,7 +116,7 @@ function RegisterPage() {
               required
               value={form.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -131,7 +131,7 @@ function RegisterPage() {
               required
               value={form.password}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -146,14 +146,14 @@ function RegisterPage() {
               required
               value={form.passwordConfirm}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+            className="w-full py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 disabled:bg-gray-400"
           >
             {loading ? "처리 중..." : "회원가입"}
           </button>
@@ -171,7 +171,7 @@ function RegisterPage() {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           이미 계정이 있으신가요?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-gray-800 hover:underline">
             로그인
           </Link>
         </p>

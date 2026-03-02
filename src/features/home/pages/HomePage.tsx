@@ -15,8 +15,8 @@ const EMOTIONS: EmotionConfig[] = [
     value: "SAD",
     label: "슬퍼",
     emoji: "😢",
-    cardStyle: "bg-blue-50 border border-blue-200",
-    buttonStyle: "bg-blue-400 hover:bg-blue-500",
+    cardStyle: "bg-gray-50 border border-gray-200",
+    buttonStyle: "bg-gray-500 hover:bg-gray-600",
   },
   {
     value: "ANGRY",

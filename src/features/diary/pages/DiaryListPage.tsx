@@ -32,8 +32,8 @@ const FILTER_BUTTONS: {
     value: "SAD",
     label: "SAD",
     emoji: "😢",
-    active: "bg-blue-400 text-white",
-    inactive: "bg-white text-gray-600 border border-gray-300 hover:bg-blue-50",
+    active: "bg-gray-500 text-white",
+    inactive: "bg-white text-gray-600 border border-gray-300 hover:bg-gray-50",
   },
   {
     value: "ANGRY",
@@ -80,7 +80,7 @@ function DiaryListPage() {
           <h1 className="text-2xl font-bold text-gray-800">내 일기</h1>
           <button
             onClick={() => navigate("/")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition-colors"
           >
             새 일기 작성
           </button>
@@ -115,7 +115,7 @@ function DiaryListPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <p
-                      className="text-sm text-gray-600 cursor-pointer hover:text-blue-600"
+                      className="text-sm text-gray-600 cursor-pointer hover:text-gray-800"
                       onClick={() => navigate(`/diary/${diary.id}`)}
                     >
                       {diary.content.slice(0, 60)}

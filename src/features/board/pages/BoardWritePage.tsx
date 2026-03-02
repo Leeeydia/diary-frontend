@@ -109,7 +109,7 @@ function BoardWritePage() {
             value={form.title}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           {/* 감정 선택 */}
@@ -117,7 +117,7 @@ function BoardWritePage() {
             name="emotion"
             value={form.emotion}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300"
           >
             <option value="HAPPY">행복</option>
             <option value="SAD">슬픔</option>
@@ -133,7 +133,7 @@ function BoardWritePage() {
             onChange={handleChange}
             required
             rows={12}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"
           />
 
           {error && <p className="text-sm text-red-600 text-center">{error}</p>}

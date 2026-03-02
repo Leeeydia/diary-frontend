@@ -168,7 +168,7 @@ function DiaryDetailPage() {
           )}
 
           {!isReplyLoading && aiReply && (
-            <div className="bg-blue-50 rounded-lg border border-blue-200 p-6">
+            <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
               <p className="text-gray-700 whitespace-pre-wrap">
                 {aiReply.reply}
               </p>
