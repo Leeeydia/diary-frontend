@@ -75,7 +75,7 @@ function BoardListPage() {
           <h1 className="text-2xl font-bold text-gray-800">게시판</h1>
           <button
             onClick={() => navigate("/board/new")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
           >
             글 작성
           </button>
@@ -89,8 +89,8 @@ function BoardListPage() {
               onClick={() => handleEmotionChange(emotion)}
               className={`px-3 py-1 rounded-full text-sm border transition-colors ${
                 emotionFilter === emotion
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
+                  ? "bg-gray-400 text-white border-gray-400"
+                  : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"
               }`}
             >
               {EMOTION_LABELS[emotion]}

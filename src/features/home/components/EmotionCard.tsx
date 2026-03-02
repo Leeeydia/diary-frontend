@@ -2,6 +2,13 @@
 import {useRef, useState} from "react";
 import type {EmotionConfig} from "../types/home.types";
 
+const EMOTION_BG: Record<string, string> = {
+    HAPPY: "rgba(244, 208, 111, 0.2)",
+    SAD:   "rgba(125, 167, 199, 0.2)",
+    ANGRY: "rgba(226, 125,  96, 0.2)",
+    CALM:  "rgba(141, 181, 150, 0.2)",
+};
+
 interface Props {
     config: EmotionConfig;
     onWrite: () => void;
@@ -49,8 +56,8 @@ function EmotionCard({config, onWrite}: Props) {
                     }}
                 />
 
-                {/* 오버레이 */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70"/>
+                {/* 감정 색상 오버레이 (20% opacity) */}
+                <div className="absolute inset-0" style={{backgroundColor: EMOTION_BG[config.value]}}/>
 
                 {/* 텍스트 */}
                 <div
